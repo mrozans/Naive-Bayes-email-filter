@@ -1,0 +1,4 @@
+[![Build Status](https://travis-ci.com/marcjanek/discrete-knapsack-problem.svg?token=iC8pd3aumdJ2QuJD8bMm&branch=master)](https://travis-ci.com/marcjanek/discrete-knapsack-problem)
+[![BCH compliance](https://bettercodehub.com/edge/badge/marcjanek/discrete-knapsack-problem?branch=master&token=2e0fe664c0aef2ae3c0909df8f7a1de8fec83ea3)](https://bettercodehub.com/)
+
+Napisać program, który korzystając z uczenia Bayesowskiego (Naive Bayes) będzie w stanie zaklasyfikować wiadomości e-mail jako SPAM lub nie. Zbiór danych do użycia: Enron-Spam in pre-processed form - http://www2.aueb.gr/users/ion/data/enron-spam/ // Więcej info na http://home.elka.pw.edu.pl/~mmarkiew/2019-pszt.html
