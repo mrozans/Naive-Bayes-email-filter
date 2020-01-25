@@ -13,12 +13,18 @@ public class Word implements Comparable<Word> {
         this.name = name;
     }
 
-    void increaseHam(final int newHam){
+    public void increaseHam(final int newHam){
         this.ham += newHam;
     }
 
     public void increaseSpam(final int newSpam) {
         this.spam += newSpam;
+    }
+    public void incrementSpam(){
+        ++this.spam;
+    }
+    public void incrementHam(){
+        ++this.ham;
     }
 
     @Override

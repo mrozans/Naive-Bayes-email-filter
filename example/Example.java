@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Example {
-    private final static int LEARN_FOLDERS = 1;
+    private final static int LEARN_FOLDERS = 6;
     private final static String DATA_PATH = "example/data/";
 
     public static void main(String[] args) throws IOException {
+        SpamFilter spamFilter = new SpamFilter();
+
         File file = new File(DATA_PATH);
         String[] folders = file.list();
 
@@ -19,7 +21,13 @@ public class Example {
             String[] spams = getFileValues(DATA_PATH + "/" + folders[i] + "/spam");
             String[] hams = getFileValues(DATA_PATH + "/" + folders[i] + "/ham");
 
-            //learn
+            for (String spam : spams) {
+                spamFilter.learn(spam, true);
+            }
+            for (String ham : hams) {
+                spamFilter.learn(ham, false);
+            }
+
         }
         for (int i = LEARN_FOLDERS; i < Objects.requireNonNull(file.list()).length; ++i) {
             assert folders != null;
