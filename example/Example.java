@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Example {
-    private final static int LEARN_FOLDERS = 6;
+    private final static int LEARN_FOLDERS = 5;
     private final static String DATA_PATH = "example/data/";
 
     public static void main(String[] args) throws IOException {
@@ -29,14 +29,28 @@ public class Example {
             }
 
         }
+        int spamsFails = 0;
+        int hamsFails = 0;
+        int spamCounter = 0,hamCounter = 0;
+
         for (int i = LEARN_FOLDERS; i < Objects.requireNonNull(file.list()).length; ++i) {
             assert folders != null;
 
             String[] spams = getFileValues(DATA_PATH + "/" + folders[i] + "/spam");
+            for (String spam : spams) {
+                if(!spamFilter.isSpam(spam))
+                    spamsFails++;
+            }
+            spamCounter += spams.length;
             String[] hams = getFileValues(DATA_PATH + "/" + folders[i] + "/ham");
-
-            //test
+            for (String ham : hams) {
+                if(!spamFilter.isHam(ham))
+                    hamsFails++;
+            }
+            hamCounter += hams.length;
         }
+        System.out.println("spams fails: " + spamsFails + "in: " + spamCounter + "; % = " + 100 * spamsFails/ spamCounter);
+        System.out.println("hams fails: " + hamsFails + "in: " + hamCounter + "; % = " + 100 * hamsFails/ hamCounter);
     }
 
     private static String[] getFileValues(final String path) throws IOException {

@@ -2,16 +2,24 @@ package algorithm;
 
 import model.Word;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class NaiveBayes
 {
     public boolean isSpamEmail(int spam, int ham, String[] words, Map<String, Word> map)
     {
-        double value = Math.log10(spam/ham);
+        List arrayList = new ArrayList<Word>();
         for (String word : words) {
-            if(map.get(word).getSpam() > 0 && map.get(word).getHam() == 0) return true;
-            value += Math.log10(probabilityOfSpamWord(word, spam, map) / probabilityOfHamWord(word, ham, map));
+            arrayList.add(map.get(word));
+        }
+        //
+        double value = Math.log10((double)spam/(double)ham);
+        for (String word : words) {
+            if(map.get(word) == null) continue;
+            double v = Math.log10(probabilityOfSpamWord(word, spam, map) / probabilityOfHamWord(word, ham, map));
+            value += v;
         }
         return value > 0;
     }
