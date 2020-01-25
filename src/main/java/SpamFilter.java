@@ -1,5 +1,6 @@
 import algorithm.NaiveBayes;
 import model.Word;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,7 +11,7 @@ public class SpamFilter {
     private NaiveBayes naiveBayes = new NaiveBayes();
     final private String REGEX = " |\r\n|\r|\n";
     public void learn(String sentence, boolean isSpam){
-
+        //System.out.println(String.join(" ",filter(sentence.split(REGEX))));
         for (String wordString : filter(sentence.split(REGEX))) {
             Word wordClass = new Word(wordString);
 
@@ -31,7 +32,7 @@ public class SpamFilter {
     }
 
     public boolean isSpam(String string){
-        return naiveBayes.isSpamEmail(spams, hams, string.split(REGEX), map);
+        return naiveBayes.isSpamEmail(spams, hams, filter(string.split(REGEX)), map);
     }
 
     public boolean isHam(String string){
@@ -60,6 +61,7 @@ public class SpamFilter {
                         return e.substring(0, e.length() - 1);
                     return e;
                 })
+                .filter(e-> !NumberUtils.isNumber(e))
                 .filter(e->!e.equals(""))
                 .toArray(String[]::new);
     }
