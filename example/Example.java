@@ -2,11 +2,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 public class Example {
-    private final static int LEARN_FOLDERS = 5;
+    private final static double value = 0.5;
     private final static String DATA_PATH = "example/data/";
 
     public static void main(String[] args) throws IOException {
@@ -15,55 +14,50 @@ public class Example {
         File file = new File(DATA_PATH);
         String[] folders = file.list();
 
-        for (int i = 0; i < LEARN_FOLDERS && i < Objects.requireNonNull(file.list()).length; ++i) {
+        List<String> hams = new LinkedList<>();
+        List<String> spams = new LinkedList<>();
+
+        //load data
+        for (int i = 0; i < Objects.requireNonNull(file.list()).length; ++i) {
+
             assert folders != null;
-
-            String[] spams = getFileValues(DATA_PATH + "/" + folders[i] + "/spam");
-            String[] hams = getFileValues(DATA_PATH + "/" + folders[i] + "/ham");
-
-            for (String spam : spams) {
-                spamFilter.learn(spam, true);
-            }
-            for (String ham : hams) {
-                spamFilter.learn(ham, false);
-            }
-
+            spams.addAll(getFileValues(DATA_PATH + "/" + folders[i] + "/spam"));
+            hams.addAll(getFileValues(DATA_PATH + "/" + folders[i] + "/ham"));
         }
-        int spamsFails = 0;
-        int hamsFails = 0;
-        int spamCounter = 0,hamCounter = 0;
-
-        for (int i = LEARN_FOLDERS; i < Objects.requireNonNull(file.list()).length; ++i) {
-            assert folders != null;
-
-            String[] spams = getFileValues(DATA_PATH + "/" + folders[i] + "/spam");
-            for (String spam : spams) {
-                if(!spamFilter.isSpam(spam))
-                    spamsFails++;
-            }
-            spamCounter += spams.length;
-            String[] hams = getFileValues(DATA_PATH + "/" + folders[i] + "/ham");
-            for (String ham : hams) {
-                if(!spamFilter.isHam(ham))
-                    hamsFails++;
-            }
-            hamCounter += hams.length;
+        //shuffle data
+        Collections.shuffle(hams);
+        Collections.shuffle(spams);
+        //learn
+        for(int i=0; i<hams.size() * value; ++i){
+            spamFilter.learn(hams.get(i), false);
         }
-        System.out.println("spams fails: " + spamsFails + "in: " + spamCounter + "; % = " + 100 * spamsFails/ spamCounter);
-        System.out.println("hams fails: " + hamsFails + "in: " + hamCounter + "; % = " + 100 * hamsFails/ hamCounter);
+        for(int i=0; i<spams.size() * value; ++i){
+            spamFilter.learn(spams.get(i), true);
+        }
+        //calculate
+        spamFilter.update();
+
+        //test
+        int spamsFails = 0, hamsFails = 0;
+        for(int i = (int) (hams.size() * value); i<hams.size(); ++i){
+            if(!spamFilter.isHam(hams.get(i)))
+                hamsFails++;
+        }
+        for(int i = (int) (spams.size() * value); i<spams.size(); ++i){
+            if(!spamFilter.isSpam(spams.get(i)))
+                spamsFails++;
+        }
+        System.out.println("spams fails: " + spamsFails + " in: " + spams.size() + "; % = " + 100 * spamsFails/ spams.size());
+        System.out.println("hams fails: " + hamsFails + " in: " + hams.size() + "; % = " + 100 * hamsFails/ hams.size());
     }
 
-    private static String[] getFileValues(final String path) throws IOException {
+    private static ArrayList<String> getFileValues(final String path) throws IOException {
         File folder = new File(path);
         ArrayList<String> arrayList = new ArrayList<>();
         for (String file : Objects.requireNonNull(folder.list())) {
-            arrayList.add(getFileValue(path + "/" + file));
+            arrayList.add(new String(Files.readAllBytes(Paths.get(path + "/" + file))));
         }
-        return arrayList.toArray(new String[0]);
-    }
-
-    private static String getFileValue(final String path) throws IOException {
-        return new String(Files.readAllBytes(Paths.get(path)));
+        return arrayList;
     }
 
 }

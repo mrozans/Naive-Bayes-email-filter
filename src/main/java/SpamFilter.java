@@ -6,12 +6,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SpamFilter {
-    private Map<String, Word> map = new TreeMap<>();
+    private Map<String, Word> map;
     private int hams = 0, spams = 0;
-    private NaiveBayes naiveBayes = new NaiveBayes();
+    private NaiveBayes naiveBayes;
     final private String REGEX = " |\r\n|\r|\n";
+
+    SpamFilter(){
+        this.map = new TreeMap<>();
+        this.naiveBayes = new NaiveBayes(map);
+    }
+
     public void learn(String sentence, boolean isSpam){
-        //System.out.println(String.join(" ",filter(sentence.split(REGEX))));
         for (String wordString : filter(sentence.split(REGEX))) {
             Word wordClass = new Word(wordString);
 
@@ -31,8 +36,17 @@ public class SpamFilter {
         }
     }
 
+    public void update(){
+        naiveBayes.setTotalHamEmails(hams);
+        naiveBayes.setTotalSpamEmails(spams);
+        map.forEach((key, value) -> {
+            value.setProbabilityOfHam(naiveBayes.probabilityOfHamWord(hams, value));
+            value.setProbabilityOfSpam(naiveBayes.probabilityOfSpamWord(spams, value));
+        });
+    }
+
     public boolean isSpam(String string){
-        return naiveBayes.isSpamEmail(spams, hams, filter(string.split(REGEX)), map);
+        return naiveBayes.isSpamEmail(filter(string.split(REGEX)));
     }
 
     public boolean isHam(String string){
