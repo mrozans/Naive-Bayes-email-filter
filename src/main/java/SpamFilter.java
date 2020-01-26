@@ -2,14 +2,16 @@ import algorithm.NaiveBayes;
 import model.Word;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 
 public class SpamFilter {
+    public String REGEX = " |\r\n|\r|\n";
     private Map<String, Word> map;
     private int hams = 0, spams = 0;
     private NaiveBayes naiveBayes;
-    final private String REGEX = " |\r\n|\r|\n";
 
     SpamFilter(){
         this.map = new TreeMap<>();
@@ -64,10 +66,7 @@ public class SpamFilter {
                         return true;
                     if (count == 0)
                         return false;
-                    if (count == 1 && Character.isLetter(e.charAt(e.length() - 1))) {
-                        return true;
-                    }
-                    return false;
+                    return count == 1 && Character.isLetter(e.charAt(e.length() - 1));
                 })
                 .map(String::toLowerCase)
                 .map(e -> {
@@ -79,5 +78,4 @@ public class SpamFilter {
                 .filter(e->!e.equals(""))
                 .toArray(String[]::new);
     }
-
 }

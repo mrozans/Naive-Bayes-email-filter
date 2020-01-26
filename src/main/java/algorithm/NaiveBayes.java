@@ -1,13 +1,10 @@
 package algorithm;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import model.Word;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -42,8 +39,6 @@ public class NaiveBayes
     }
 
     private double probability(double nominator, double denominator){
-         if(denominator == 0)
-             return Double.POSITIVE_INFINITY;
-         return nominator/denominator;
+        return denominator == 0 ? Double.POSITIVE_INFINITY : nominator / denominator;
     }
 }
