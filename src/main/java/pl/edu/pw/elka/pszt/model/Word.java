@@ -1,4 +1,4 @@
-package model;
+package pl.edu.pw.elka.pszt.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

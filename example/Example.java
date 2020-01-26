@@ -1,4 +1,5 @@
 import lombok.Value;
+import pl.edu.pw.elka.pszt.SpamFilter;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +12,7 @@ public class Example {
 
     public static void main(String[] args) throws IOException {
         Example example = new Example();
-        final DTO dto = example.example(0.5);
+        final DTO dto = example.example(0.9);
         System.out.println(dto);
     }
 
@@ -49,7 +50,7 @@ public class Example {
         int spamsSuccess = 0, spamsFails = 0;
         final long before = System.currentTimeMillis();
         for (int i = (int) (hams.size() * value); i < hams.size(); ++i) {
-            if (!spamFilter.isHam(hams.get(i)))
+            if (spamFilter.isSpam(hams.get(i)))
                 hamsFails++;
             else
                 ++hamsSuccess;
@@ -61,12 +62,12 @@ public class Example {
             else
                 ++spamsSuccess;
         }
-        final DTO dto = new DTO(hamsSuccess,
+        return new DTO(hamsSuccess,
                 hamsFails,
                 spamsSuccess,
                 spamsFails,
-                (System.currentTimeMillis() - before) / (hamsSuccess + hamsFails + spamsSuccess + spamsFails));
-        return dto;
+                (System.currentTimeMillis() - before) / (hamsSuccess + hamsFails + spamsSuccess + spamsFails)
+        );
     }
 
     private ArrayList<String> getFileValues(final String path) throws IOException {

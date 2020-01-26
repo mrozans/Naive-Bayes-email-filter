@@ -31,7 +31,7 @@ public class Chart {
         //create chart
         XYChart chart = new XYChartBuilder().width(800)
                 .height(800)
-                .title("Skuteczność filtra w zależności od ilości danych treningowych")
+                .title("Skuteczność filtra spamowego w zależności od ilości danych treningowych")
                 .xAxisTitle("procent danych traningowych")
                 .yAxisTitle("procent prawidłowych ocen maila")
                 .build();
