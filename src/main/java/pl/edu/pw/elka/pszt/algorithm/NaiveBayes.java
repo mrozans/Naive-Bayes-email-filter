@@ -13,14 +13,17 @@ public class NaiveBayes {
     private final Map<String, Word> map;
     @Setter
     @Getter
-    private double totalSpamEmails = 0, totalHamEmails = 0;
+    private double totalSpamEmails = 0;
+    @Setter
+    @Getter
+    private double totalHamEmails = 0;
 
     public boolean isHam(String[] words) {
-        return calculateHamProbability(totalHamEmails / totalSpamEmails, words) > 0;
+        return calculateHamProbability(probability(totalHamEmails, totalSpamEmails), words) > 0;
     }
 
     public boolean isSpam(String[] words) {
-        return calculateSpamProbability(totalSpamEmails / totalHamEmails, words) > 0;
+        return calculateSpamProbability(probability(totalSpamEmails, totalHamEmails), words) > 0;
     }
 
     public double probabilityOfSpamWord(int spam, Word word) {
@@ -49,7 +52,7 @@ public class NaiveBayes {
         }).sum() + Math.log10(initValue);
     }
 
-    private double probability(double nominator, double denominator){
+    private double probability(double nominator, double denominator) {
         return denominator == 0 ? 1 : nominator / denominator;
     }
 }
